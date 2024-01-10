@@ -16,18 +16,18 @@ import java.util.Map;
  * Hello world!
  *
  */
-public class App {
+public class JDBCDemo {
     public static void main(String[] args) throws SQLException {
         Connection conn = null;
         try {
             Class.forName("ru.yandex.clickhouse.ClickHouseDriver");
-            conn = DriverManager.getConnection("jdbc:clickhouse://clickhouse.lixingyu.cn:7123/test", "admin", "lxy123");
+            conn = DriverManager.getConnection("jdbc:clickhouse://server:port/test", "admin", "lxy123");
         } catch (Exception e) {
             System.out.println("获取数据库连接异常！");
         }
         PreparedStatement pstmt = conn.prepareStatement(
             "CREATE TABLE test.user_info (name VARCHAR(20),age UInt8,sex UInt8,id UInt8) ENGINE = MergeTree primary key id;");
-        pstmt.execute();
+        // pstmt.execute();
         System.out.println("建表语句执行成功！");
         pstmt = conn.prepareStatement(
             "insert into user_info (name,age,sex) values('zhangsan', '20', '1'),('lisi', '100', '1'),('wangwu', '3', '0'),('zhaoliu', '20', '1')");
@@ -72,7 +72,8 @@ public class App {
             System.out.println(item);
         });
         System.out.println("查询语句执行成功！");
-        statement.execute("drop table user_info;");
+        statement.execute("TRUNCATE table user_info;");
         System.out.println("删除语句执行成功！");
+        conn.close();
     }
 }
